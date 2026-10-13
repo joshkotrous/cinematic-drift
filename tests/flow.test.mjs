@@ -1,0 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {CloudFlow} from '../engine/flow.js';
+test('ridge spill fades into a clear lee side, without refilling downstream',()=>{const s=new CloudFlow(64,1536);s.settings.wind=90;s.settings.shape=1;s.rebuild();for(let k=0;k<300;k++)s.step(.1);const x=32,up=18*s.n+x,crest=32*s.n+x,lee=48*s.n+x;assert.ok(s.cover[up]>.3,'windward supply remains cloudy');assert.ok(s.cover[crest]>.2,'ridge crest remains cloudy');assert.ok(s.cover[lee]<.04,'lee side clears');assert.ok(s.top[lee]<s.settings.altitude-50,'spill descends instead of continuing at original height');});
+test('reversing wind reverses the dry side',()=>{const s=new CloudFlow(64,1536);s.settings.wind=90;s.rebuild();const a=s.drop[48*s.n+32],b=s.drop[18*s.n+32];s.settings.wind=270;s.recomputeLee();assert.ok(a>b+80);assert.ok(s.drop[18*s.n+32]>s.drop[48*s.n+32]+80);});
+test('zero density clears and extreme time steps remain finite',()=>{const s=new CloudFlow(32,1024);s.settings.density=0;s.rebuild();for(let k=0;k<100;k++)s.step(20);assert.ok(s.cover.every(v=>v===0));assert.ok(s.top.every(Number.isFinite));for(let k=0;k<s.top.length;k++)assert.ok(s.top[k]>=s.height[k]+12);});

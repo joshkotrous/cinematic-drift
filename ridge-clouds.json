@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "wind": 90,
+  "speed": 5,
+  "altitude": 228.0,
+  "density": 1,
+  "thickness": 16,
+  "evaporation": 85.0,
+  "quality": 96,
+  "scale": 32,
+  "windOverride": false,
+  "densityOverride": false
+}
