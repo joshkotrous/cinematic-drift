@@ -4,6 +4,16 @@ Cinematic Minecraft lighting with terrain-responsive dynamic clouds. This reposi
 
 Based on **Complementary Shaders by EminGT / Complementary Development**, preserving the existing CinematicWater customizations. Original downloads and attribution: [Complementary's official website](https://www.complementary.dev/). This is a customized derivative, not an official Complementary release.
 
+## In-game gallery
+
+Real captures from the running Minecraft 26.3 world in Dynamic cloud mode. [Capture details and viewpoints](docs/screenshots/README.md).
+
+![Dynamic clouds around a mountain crest in daylight](docs/screenshots/daylight-crest.png)
+
+![Clouds along the lee slope](docs/screenshots/daylight-lee-slope.png)
+
+![Wide valley view under the world's original twilight lighting](docs/screenshots/twilight-valley.png)
+
 ## Requirements
 
 Minecraft Java **26.3**, Java **25**, Fabric Loader **0.19.5**, Fabric API **0.162.0**, Iris **1.11.7**, and Sodium **0.9.2**. The patcher requires `ComplementaryUnbound_r5.9.3_CinematicWater.zip` in the profile's shaderpacks folder. Node.js runs the lab.
