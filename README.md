@@ -1,6 +1,8 @@
 # Cinematic Drift
 
-Cinematic Minecraft lighting with terrain-responsive dynamic clouds. This repository contains the **Ridge Clouds client mod**, standalone cloud lab, and a patcher that builds **Cinematic Drift** from a local CinematicWater installation.
+Cinematic Drift expands on Complementary with a more cinematic look, water shader fixes carried forward from the CinematicWater customizations, and terrain-responsive dynamic clouds that roll through valleys and spill over ridges.
+
+This repository contains the **Ridge Clouds client mod**, standalone cloud lab, and a patcher that builds **Cinematic Drift** from a local CinematicWater installation.
 
 Based on **Complementary Shaders by EminGT / Complementary Development**, preserving the existing CinematicWater customizations. Original downloads and attribution: [Complementary's official website](https://www.complementary.dev/). This is a customized derivative, not an official Complementary release.
 
@@ -12,7 +14,31 @@ Real captures from the running Minecraft 26.3 world in Dynamic cloud mode. [Capt
 
 ![Clouds along the lee slope](docs/screenshots/daylight-lee-slope.png)
 
-![Wide valley view under the world's original twilight lighting](docs/screenshots/twilight-valley.png)
+### Across weather and biomes
+
+Sunrise over desert terrain.
+
+![Desert at sunrise](docs/screenshots/desert-sunrise.png)
+
+Rain over forested hills.
+
+![Forested hills in rain](docs/screenshots/forest-rain.png)
+
+Late afternoon light across plains.
+
+![Plains near sunset](docs/screenshots/plains-sunset.png)
+
+Snowfall around mountain slopes.
+
+![Snowy mountain slopes](docs/screenshots/snowy-slopes.png)
+
+Clear daylight in the frozen peaks.
+
+![Frozen peaks in daylight](docs/screenshots/frozen-peaks.png)
+
+Storm clouds around the original ridge.
+
+![Mountain ridge in stormy weather](docs/screenshots/ridge-storm.png)
 
 ## Requirements
 
@@ -30,6 +56,16 @@ Copy `ridge-clouds-0.4.0+26.3.jar` into the Fabric profile's `mods` directory. K
 ```
 
 The build resolves dependencies from installed Minecraft libraries. Select the generated `patched-shaderpacks/CinematicDrift_DynamicClouds.zip` in Iris. The optional `install-curseforge.ps1` backs up changed files and installs the mod and generated shader. Close Minecraft before replacing a loaded mod JAR.
+
+## Automatic mod releases
+
+Every push to `main` builds the mod JAR from source with Java 25, runs the cloud simulation checks, and publishes a GitHub prerelease with the JAR and a SHA-256 checksum. Download builds from [Releases](https://github.com/joshkotrous/cinematic-drift/releases). The workflow can also be run manually from Actions. Build versions include the workflow run number and commit so each artifact can be identified.
+
+The release contains the client mod. Generate the shader pack locally using the installation instructions above; the customized Complementary shader is not bundled in the mod JAR. CI downloads its pinned Minecraft, Fabric and Iris dependencies without needing a CurseForge installation. To run the same build locally with Python 3.11+ and JDK 25:
+
+```sh
+python mod/build-ci.py
+```
 
 ## Cloud settings
 
