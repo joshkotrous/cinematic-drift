@@ -71,10 +71,10 @@ python mod/build-ci.py
 
 Cloud Mode offers **Vanilla**, **Volumetric** (the original Complementary renderer), and **Dynamic** (terrain-responsive clouds). The Visual Style baseline is fixed; its selector and the Information tab are removed.
 
-Under **Shader Options → Atmosphere → Clouds → Dynamic Clouds**:
+Under **Shader Options â†’ Atmosphere â†’ Clouds â†’ Dynamic Clouds**:
 
 - Density: **108%** default; **100%** preserves the original coverage baseline.
-- Mountain wind gain: **1** default, giving up to **2×** base drift speed on high terrain. **0** disables the gain.
+- Mountain wind gain: **1** default, giving up to **2Ã—** base drift speed on high terrain. **0** disables the gain.
 - Wind elevation range: **160 blocks above sea level** by default.
 
 The mod samples loaded Overworld heightmaps, including Tectonic terrain. Wind changes affect both flow and visible cloud noise. Lee-side drying produces a finite spill. Distant Horizons' stored LOD terrain is not sampled by this build.
@@ -97,4 +97,4 @@ Open <http://127.0.0.1:8793>. Terrain, wind, altitude, density and evaporation a
 - `shader/`: dynamic renderer and pack transformation.
 - `mod/src/test/java/` and `tests/`: GPU upload, shader routing, mountain wind and flow checks.
 
-See [TEST-IN-GAME.md](TEST-IN-GAME.md) for commands and [CRASH-FIX.md](CRASH-FIX.md) for the upload regression. This is an experimental build tied to the versions above. Appearance and performance need testing across locations and hardware.
+See [in-game testing skill](.cursor/skills/test-in-game/SKILL.md) for commands and [CRASH-FIX.md](CRASH-FIX.md) for the upload regression. This is an experimental build tied to the versions above. Appearance and performance need testing across locations and hardware.
