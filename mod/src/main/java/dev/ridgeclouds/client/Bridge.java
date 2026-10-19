@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
@@ -30,15 +31,22 @@ public final class Bridge {
     public static int worldZ(int k){return originZ+(k/FLOW.n)*16+8;}
     public static void tick(){Minecraft mc=Minecraft.getInstance();if(config==null)config=mc.gameDirectory.toPath().resolve("config/ridge-clouds.json");if(System.nanoTime()-lastSettings>1_000_000_000L){lastSettings=System.nanoTime();try{long stamp=java.nio.file.Files.exists(config)?java.nio.file.Files.getLastModifiedTime(config).toMillis():0;if(stamp!=configStamp){settings=Settings.read(config);configStamp=java.nio.file.Files.getLastModifiedTime(config).toMillis();}}catch(Exception ignored){}}
         active=settings.enabled&&mc.level!=null&&mc.player!=null&&mc.level.dimension().equals(Level.OVERWORLD);
-        if(!active){if(world!=null){world=null;java.util.Arrays.fill(FLOW.validity,0);dirty=true;}return;}
+        if(!active){if(world!=null){world=null;FLOW.clearTerrain();leeDirty=true;dirty=true;}return;}
         int x=((int)Math.floor(mc.player.getX()/16)-48)*16,z=((int)Math.floor(mc.player.getZ()/16)-48)*16;
-        if(world!=mc.level){world=mc.level;originX=x;originZ=z;java.util.Arrays.fill(FLOW.validity,0);java.util.Arrays.fill(FLOW.terrain,0);FLOW.reset();cursor=0;}
-        else if(x!=originX||z!=originZ){FLOW.shift((x-originX)/16,(z-originZ)/16);originX=x;originZ=z;cursor=0;}
+        if(world!=mc.level){world=mc.level;originX=x;originZ=z;FLOW.clearTerrain();leeDirty=true;cursor=0;}
+        else if(x!=originX||z!=originZ){FLOW.shift((x-originX)/16,(z-originZ)/16);originX=x;originZ=z;leeDirty=true;cursor=0;}
         // At most 512 loaded columns per tick; never generate/request missing chunks.
         for(int count=0;count<512;count++){int k=cursor++%(FLOW.n*FLOW.n),i=k%FLOW.n,j=k/FLOW.n,wx=originX+i*16+8,wz=originZ+j*16+8;
-            if(world.hasChunk(wx>>4,wz>>4)){float h=world.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,wx,wz);if(FLOW.terrain[k]!=h||FLOW.validity[k]==0)leeDirty=true;FLOW.terrain[k]=h;FLOW.validity[k]=1;FLOW.centre[k]=Math.max(FLOW.centre[k],h+12);}else{if(FLOW.validity[k]!=0)leeDirty=true;FLOW.validity[k]=0;}
+            // false prevents requests and avoids accepting the empty fallback chunk as ground.
+            var chunk=world.getChunkSource().getChunk(wx>>4,wz>>4,ChunkStatus.FULL,false);
+            if(chunk!=null&&!chunk.isEmpty()){
+                float h=chunk.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,wx&15,wz&15)+1;
+                if(FLOW.observeTerrain(k,h))leeDirty=true;
+            }
+            // Missing columns retain their last known height while inside this bounded grid.
+
         }FLOW.direction=settings.windOverride?settings.wind:90;FLOW.evaporation=settings.evaporation;
-        if(previousWind!=settings.wind){leeDirty=true;previousWind=settings.wind;}
+        if(previousWind!=FLOW.direction){leeDirty=true;previousWind=FLOW.direction;}
         if(leeDirty&&tickCounter++%10==0){FLOW.recomputeLee();leeDirty=false;}dirty=true;
     }
     public static void frame(){long now=System.nanoTime();float dt=lastFrame==0?0:Math.min(.1f,(now-lastFrame)/1e9f);lastFrame=now;FLOW.altitude=settings.altitude;FLOW.density=settings.densityOverride?settings.density:1f;FLOW.speed=settings.windOverride?settings.speed:nativeSpeed();FLOW.direction=settings.windOverride?settings.wind:90;

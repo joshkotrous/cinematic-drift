@@ -7,7 +7,7 @@ installation.json
 *.zip
 *.class
 *.jar
-!ridge-clouds-0.4.0+26.3.jar
+!ridge-clouds-0.4.1+26.3.jar
 *.log
 hs_err_*
 .DS_Store

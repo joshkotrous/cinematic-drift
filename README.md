@@ -6,6 +6,12 @@ This repository contains the **Ridge Clouds client mod**, standalone cloud lab, 
 
 Based on **Complementary Shaders by EminGT / Complementary Development**, preserving the existing CinematicWater customizations. Original downloads and attribution: [Complementary's official website](https://www.complementary.dev/). This is a customized derivative, not an official Complementary release.
 
+## 0.4.1 patch
+
+Fixes cloud height snapping as chunks stream in. Known terrain stays cached while inside the sampling grid, new heights transition gradually, and lee-side data moves with the grid instead of remaining at its previous coordinates. Empty/unavailable chunks are not treated as terrain. Existing shader settings and the shader ZIP remain compatible; replace the mod JAR and restart Minecraft.
+
+The build now runs Java regression checks against the shipped simulation for streaming peaks, bounded motion, unload/reload continuity, grid recentering and world resets, in addition to the lab tests.
+
 ## In-game gallery
 
 Real captures from the running Minecraft 26.3 world in Dynamic cloud mode. [Capture details and viewpoints](docs/screenshots/README.md).
@@ -48,7 +54,7 @@ Generated shader ZIPs, vendor libraries, profile backups and installation record
 
 ## Install and build
 
-Copy `ridge-clouds-0.4.0+26.3.jar` into the Fabric profile's `mods` directory. Keep only one version of the mod installed. From the repository root in PowerShell:
+Copy `ridge-clouds-0.4.1+26.3.jar` into the Fabric profile's `mods` directory. Keep only one version of the mod installed. From the repository root in PowerShell:
 
 ```powershell
 ./mod/build-local.ps1 -InstanceDirectory '<your profile>' -JavaHome '<your JDK 25>'
@@ -71,10 +77,10 @@ python mod/build-ci.py
 
 Cloud Mode offers **Vanilla**, **Volumetric** (the original Complementary renderer), and **Dynamic** (terrain-responsive clouds). The Visual Style baseline is fixed; its selector and the Information tab are removed.
 
-Under **Shader Options â†’ Atmosphere â†’ Clouds â†’ Dynamic Clouds**:
+Under **Shader Options Ã¢â€ â€™ Atmosphere Ã¢â€ â€™ Clouds Ã¢â€ â€™ Dynamic Clouds**:
 
 - Density: **108%** default; **100%** preserves the original coverage baseline.
-- Mountain wind gain: **1** default, giving up to **2Ã—** base drift speed on high terrain. **0** disables the gain.
+- Mountain wind gain: **1** default, giving up to **2Ãƒâ€”** base drift speed on high terrain. **0** disables the gain.
 - Wind elevation range: **160 blocks above sea level** by default.
 
 The mod samples loaded Overworld heightmaps, including Tectonic terrain. Wind changes affect both flow and visible cloud noise. Lee-side drying produces a finite spill. Distant Horizons' stored LOD terrain is not sampled by this build.

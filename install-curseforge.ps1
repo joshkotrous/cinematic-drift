@@ -8,9 +8,12 @@ $irisPath=Join-Path $InstanceDirectory 'config/iris.properties'
 Copy-Item $irisPath (Join-Path $backup 'iris.properties')
 $configPath=Join-Path $InstanceDirectory 'config/ridge-clouds.json'
 if(Test-Path $configPath){Copy-Item $configPath $backup}
-$modPath=Join-Path $InstanceDirectory 'mods/ridge-clouds-0.4.0+26.3.jar'
-if(Test-Path $modPath){Copy-Item $modPath $backup}
-Copy-Item (Join-Path $PSScriptRoot 'ridge-clouds-0.4.0+26.3.jar') $modPath -Force
+$modPath=Join-Path $InstanceDirectory 'mods/ridge-clouds-0.4.1+26.3.jar'
+# Keep only one Ridge Clouds JAR. Archive older versions before replacing the mod.
+foreach($oldMod in Get-ChildItem (Join-Path $InstanceDirectory 'mods') -Filter 'ridge-clouds-*.jar'){
+    Move-Item -LiteralPath $oldMod.FullName -Destination (Join-Path $backup $oldMod.Name)
+}
+Copy-Item (Join-Path $PSScriptRoot 'ridge-clouds-0.4.1+26.3.jar') $modPath -Force
 $installed=@()
 foreach($pack in Get-ChildItem (Join-Path $PSScriptRoot 'patched-shaderpacks') -Filter '*.zip'){
     $target=Join-Path $InstanceDirectory ('shaderpacks/'+$pack.Name)
@@ -33,5 +36,5 @@ $patched='CinematicDrift_DynamicClouds.zip'
 if(!(Test-Path (Join-Path $InstanceDirectory ('shaderpacks/'+$patched)))){throw "Patched active pack missing: $patched"}
 $iris=[regex]::Replace($iris,'(?m)^shaderPack=.*',('shaderPack='+$patched))
 [IO.File]::WriteAllText($irisPath,$iris)
-[pscustomobject]@{Instance=$InstanceDirectory;Mod='ridge-clouds-0.4.0+26.3.jar';ModSHA256=(Get-FileHash $modPath).Hash;SelectedPack=$patched;Backup=$backup;Packs=$installed} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $PSScriptRoot 'installation.json')
+[pscustomobject]@{Instance=$InstanceDirectory;Mod='ridge-clouds-0.4.1+26.3.jar';ModSHA256=(Get-FileHash $modPath).Hash;SelectedPack=$patched;Backup=$backup;Packs=$installed} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $PSScriptRoot 'installation.json')
 Write-Output "Installed Ridge Clouds with $($installed.Count) shader variants; selected $patched"

@@ -17,6 +17,6 @@ $sources=Get-ChildItem "$projectRoot/src/main/java" -Recurse -Filter '*.java' | 
 & "$JavaHome/bin/javac.exe" --release 25 -proc:none -classpath ($jars -join ';') -d "$buildPath/classes" @sources
 if($LASTEXITCODE -ne 0){throw 'Java compilation failed'}
 Copy-Item "$projectRoot/src/main/resources/*" "$buildPath/classes" -Recurse -Force
-& "$JavaHome/bin/jar.exe" --create --file "$projectRoot/../ridge-clouds-0.4.0+26.3.jar" -C "$buildPath/classes" .
+& "$JavaHome/bin/jar.exe" --create --file "$projectRoot/../ridge-clouds-0.4.1+26.3.jar" -C "$buildPath/classes" .
 if($LASTEXITCODE -ne 0){throw 'Jar packaging failed'}
-Write-Output 'Built ridge-clouds-0.4.0+26.3.jar'
+Write-Output 'Built ridge-clouds-0.4.1+26.3.jar'

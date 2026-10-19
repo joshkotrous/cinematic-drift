@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "ridgeclouds",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "name": "Ridge Clouds",
   "description": "Terrain-following volumetric clouds for Complementary r5.9.3 and Iris 1.11.7",
   "environment": "client",

@@ -89,6 +89,10 @@ def main():
     def java_tool(name):
         return str(Path(args.java_home) / "bin" / (name + suffix)) if args.java_home else name
     subprocess.run([java_tool("javac"), "--release", "25", "-proc:none", "-classpath", os.pathsep.join(map(str, jars)), "-d", str(classes), *map(str, (ROOT / "src/main/java").rglob("*.java"))], check=True)
+    test_classes = BUILD / "test-classes"
+    test_classes.mkdir(exist_ok=True)
+    subprocess.run([java_tool("javac"), "--release", "25", "-classpath", str(classes), "-d", str(test_classes), str(ROOT / "src/test/java/FlowFieldStreamingTest.java")], check=True)
+    subprocess.run([java_tool("java"), "-classpath", os.pathsep.join(map(str, [classes, test_classes])), "FlowFieldStreamingTest"], check=True)
     shutil.copytree(ROOT / "src/main/resources", classes, dirs_exist_ok=True)
     if args.build_id:
         mod["version"] += "+build." + args.build_id
